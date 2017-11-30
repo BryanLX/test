@@ -58,7 +58,8 @@ void sr_init(struct sr_instance* sr)
 
 struct sr_rt * LPM(struct sr_instance *sr,uint32_t  ip_dst){
 
-
+      print("LPM pergormed for ");
+      print_addr_ip_int(ip_dst);
       struct sr_rt * result  = 0;
       struct sr_rt * cur = sr->routing_table;
       uint32_t max =0;
@@ -74,7 +75,8 @@ struct sr_rt * LPM(struct sr_instance *sr,uint32_t  ip_dst){
         }
         cur = cur->next;
       }
-
+      print("And result is ");
+      print(result->interface):
       return result;
 
 }
