@@ -113,6 +113,7 @@ void send_icmp(struct sr_instance* sr, int type, int code , uint8_t* packet, uns
 
   print_hdr_ip(ip_hdr);
   struct sr_rt *match = LPM(sr,ip_hdr->ip_src);
+  printf("Interface is :%s",match->interface);
   if(!match){
     return;
   }
