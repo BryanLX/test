@@ -198,22 +198,28 @@ void handle_nat(struct sr_instance* sr,uint8_t * packet,unsigned int len,char* i
       printf("Nat with ICMP\n");
       sr_icmp_hdr_t *icmp_hdr = (sr_icmp_hdr_t *)(packet + sizeof(sr_ethernet_hdr_t) + sizeof(sr_ip_hdr_t));
       if(strncmp(interface, NAT_IN, sr_IFACE_NAMELEN)==0) {
-          /* inside to outside */
-          printf("insideo to outside  \n");
-          result = sr_nat_lookup_internal(nat, ip_hdr->ip_src, icmp_hdr->icmp_id, nat_mapping_icmp);
-          if (!result){
-              /* If not exist then Insert */
-              result = sr_nat_insert_mapping(nat, ip_hdr->ip_src, icmp_hdr->icmp_id, nat_mapping_icmp);
-              result->ip_ext = sr_get_interface(sr, NAT_OUT)->ip;
-              result->last_updated = time(NULL);
-          }
-          /*ip_hdr->ip_src = result->ip_ext; */
-          printf("hey ip_src: \n");
-          print_addr_ip_int(result->ip_ext);
-          ip_hdr->ip_src = sr_get_interface(sr, NAT_OUT)->ip;
-          icmp_hdr->icmp_id = result->aux_ext;
+          /* inside to  */
+          if (get_iface(sr, ip_header->ip_dst)){
+              /* inside to inside */
+              send_icmp(sr, 0, 0, packet,len);
+              break;
+          }else{
+              /* inside to outside */
+              printf("insideo to outside  \n");
+              result = sr_nat_lookup_internal(nat, ip_hdr->ip_src, icmp_hdr->icmp_id, nat_mapping_icmp);
+              if (!result){
+                  /* If not exist then Insert */
+                  result = sr_nat_insert_mapping(nat, ip_hdr->ip_src, icmp_hdr->icmp_id, nat_mapping_icmp);
+                  result->ip_ext = sr_get_interface(sr, NAT_OUT)->ip;
+                  result->last_updated = time(NULL);
+              }
+              /*ip_hdr->ip_src = result->ip_ext; */
+              printf("hey ip_src: \n");
+              print_addr_ip_int(result->ip_ext);
+              ip_hdr->ip_src = sr_get_interface(sr, NAT_OUT)->ip;
+              icmp_hdr->icmp_id = result->aux_ext;
 
-
+        }
 
        }else if(strncmp(interface, NAT_OUT, sr_IFACE_NAMELEN)==0){
           /* outside to inside*/
