@@ -136,12 +136,14 @@ void send_icmp(struct sr_instance* sr, int type, int code , uint8_t* packet, uns
     uint32_t temp = ip_hdr->ip_dst;
     ip_hdr->ip_dst = ip_hdr->ip_src;
     ip_hdr->ip_src = temp;
+    icmp_hdr->icmp_id = 0;
   }
 
 
   /*Setting ICMP*/
   icmp_hdr->icmp_type = type;
   icmp_hdr->icmp_code = code;
+  icmp_hdr->icmp_seq = 0;
   icmp_hdr->icmp_sum = 0;
   icmp_hdr->icmp_sum = cksum(icmp_hdr, ntohs(ip_hdr->ip_len) - (ip_hdr->ip_hl * 4));
   ip_hdr->ip_sum = 0;
