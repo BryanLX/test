@@ -124,7 +124,6 @@ int main(int argc, char **argv)
     /* -- zero out sr instance -- */
     sr_init_instance(&sr);
 
-    sr.nat_enable = nat_Enable;
     if(nat_Enable == 1){
         printf("Nat model\n");
         struct sr_nat *nat = (struct sr_nat *)(malloc(sizeof(struct sr_nat)));
@@ -134,7 +133,7 @@ int main(int argc, char **argv)
         /* nat->sr = &sr; */
         sr.nat = nat;
     }else{
-      sr.nat = NULL;
+        sr.nat = NULL;
     }
 
     /* -- set up routing table from file -- */
