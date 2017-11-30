@@ -266,7 +266,7 @@ void handle_nat(struct sr_instance* sr,uint8_t * packet,unsigned int len,char* i
        /*Setting ICMP*/
 
        icmp_hdr->icmp_sum = 0;
-       icmp_hdr->icmp_sum = cksum(icmp_hdr, len - sizeof(sr_ethernet_hdr_t) - sizeof(sr_ip_hdr_t);
+       icmp_hdr->icmp_sum = cksum(icmp_hdr, len - sizeof(sr_ethernet_hdr_t) - sizeof(sr_ip_hdr_t));
        ip_hdr->ip_sum = 0;
        ip_hdr->ip_sum = cksum(ip_hdr, sizeof(sr_ip_hdr_t));
        print_hdr_ip(ip_hdr);
