@@ -382,7 +382,7 @@ void sr_handleip(struct sr_instance* sr,
             sr_icmp_hdr_t* icmp_header = (sr_icmp_hdr_t* )(packet + sizeof(sr_ethernet_hdr_t) + sizeof(sr_ip_hdr_t));
             print_hdr_icmp(icmp_header);
 
-            if (sr->nat_enable ==1 && strncmp(interface, NAT_OUT, sr_IFACE_NAMELEN)==0){
+            if (sr->nat_enable ==1 && strncmp(the_one->name, NAT_OUT, sr_IFACE_NAMELEN)==0){
               printf("111111111111");
               handle_nat(sr,packet,len,interface);
               send_icmp(sr, 0, 0, packet,len);
