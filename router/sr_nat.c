@@ -142,6 +142,7 @@ struct sr_nat_mapping *sr_nat_insert_mapping(struct sr_nat *nat,
   /* handle insert here, create a mapping, and then return a copy of it */
 
   struct sr_nat_mapping *mapping = sr_nat_lookup_internal(nat, ip_int, aux_int, type);
+  struct sr_nat_mapping *copy = NULL;
   if (mapping) {
         return mapping;
   }
@@ -158,8 +159,11 @@ struct sr_nat_mapping *sr_nat_insert_mapping(struct sr_nat *nat,
   mapping->next = nat->mappings;
   nat->mappings = mapping;
 
+  copy = (struct sr_nat_mapping *) malloc(sizeof(struct sr_nat_mapping));
+  memcpy(copy, mapping, sizeof(struct sr_nat_mapping));
+
   pthread_mutex_unlock(&(nat->lock));
-  return mapping;
+  return copy;
 }
 
 struct sr_nat_connection* sr_nat_lookup_connection(struct sr_nat* nat,struct sr_nat_mapping *mapping, uint32_t ip){
@@ -250,6 +254,7 @@ void handle_nat(struct sr_instance* sr,uint8_t * packet,unsigned int len,char* i
 
        if(!match){
          printf("Nat no match \n");
+         free(result);
          return;
        }
 
@@ -261,12 +266,13 @@ void handle_nat(struct sr_instance* sr,uint8_t * packet,unsigned int len,char* i
        /*Setting ICMP*/
 
        icmp_hdr->icmp_sum = 0;
-       icmp_hdr->icmp_sum = 123;
+       icmp_hdr->icmp_sum = cksum(icmp_hdr, len - sizeof(sr_ethernet_hdr_t) - sizeof(sr_ip_hdr_t);
        ip_hdr->ip_sum = 0;
        ip_hdr->ip_sum = cksum(ip_hdr, sizeof(sr_ip_hdr_t));
        print_hdr_ip(ip_hdr);
        /*send the packet*/
        handle_packet(sr,packet,len,out,match->gw.s_addr);
+       free(result);
 
 
     }else if (protocol ==ip_protocol_tcp){
