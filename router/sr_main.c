@@ -67,7 +67,7 @@ int main(int argc, char **argv)
     unsigned int topo = DEFAULT_TOPO;
     char *logfile = 0;
     struct sr_instance sr;
-    sr->nat_enable = 0;
+    sr.nat_enable = 0;
     unsigned int icmp_query_timeout = 0;
     unsigned int tcp_established_timeout = 0 ;
     unsigned int tcp_transitory_timeout = 0;
@@ -107,7 +107,7 @@ int main(int argc, char **argv)
                 template = optarg;
                 break;
             case 'n':
-                sr->nat_enable = 1;
+                sr.nat_enable = 1;
                 break;
             case 'I':
                 icmp_query_timeout = atoi((char *) optarg);
@@ -124,7 +124,7 @@ int main(int argc, char **argv)
     /* -- zero out sr instance -- */
     sr_init_instance(&sr);
 
-    if(sr->nat_enable == 1){
+    if(sr.nat_enable == 1){
         printf("Nat model\n");
         struct sr_nat *nat = (struct sr_nat *)(malloc(sizeof(struct sr_nat)));
         nat->icmp_query_timeout = icmp_query_timeout;
