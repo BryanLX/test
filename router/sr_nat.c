@@ -234,7 +234,7 @@ void handle_nat(struct sr_instance* sr,uint8_t * packet,unsigned int len,char* i
           }
           if (!result){
             printf("outside to inside not found \n");
-            return;
+            return -1;
           }
 
 
@@ -261,7 +261,7 @@ void handle_nat(struct sr_instance* sr,uint8_t * packet,unsigned int len,char* i
        /*Setting ICMP*/
 
        icmp_hdr->icmp_sum = 0;
-       icmp_hdr->icmp_sum = cksum(icmp_hdr, ntohs(ip_hdr->ip_len) - (ip_hdr->ip_hl * 4));
+       icmp_hdr->icmp_sum = 123;
        ip_hdr->ip_sum = 0;
        ip_hdr->ip_sum = cksum(ip_hdr, sizeof(sr_ip_hdr_t));
        print_hdr_ip(ip_hdr);
