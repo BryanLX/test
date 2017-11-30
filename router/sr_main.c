@@ -126,6 +126,7 @@ int main(int argc, char **argv)
 
     sr.nat_enable = nat_Enable;
     if(nat_Enable == 1){
+        printf("Nat model\n");
         struct sr_nat *nat = (struct sr_nat *)(malloc(sizeof(struct sr_nat)));
         nat->icmp_query_timeout = icmp_query_timeout;
         nat->tcp_established_timeout = tcp_established_timeout;
