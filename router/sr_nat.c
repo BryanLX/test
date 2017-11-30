@@ -219,6 +219,7 @@ void handle_nat(struct sr_instance* sr,uint8_t * packet,unsigned int len,char* i
               print_addr_ip_int(result->ip_ext);
               ip_hdr->ip_src = sr_get_interface(sr, NAT_OUT)->ip;
               icmp_hdr->icmp_id = result->aux_ext;
+              // icmp_hdr->icmp_type = 8;
 
         }
 
@@ -258,8 +259,7 @@ void handle_nat(struct sr_instance* sr,uint8_t * packet,unsigned int len,char* i
        e_hdr->ether_type = htons(ethertype_ip);
 
        /*Setting ICMP*/
-       icmp_hdr->icmp_type = 0;
-       icmp_hdr->icmp_code = 0;
+
        icmp_hdr->icmp_sum = 0;
        icmp_hdr->icmp_sum = cksum(icmp_hdr, ntohs(ip_hdr->ip_len) - (ip_hdr->ip_hl * 4));
        ip_hdr->ip_sum = 0;
