@@ -236,10 +236,32 @@ void handle_nat(struct sr_instance* sr,uint8_t * packet,unsigned int len,char* i
          return;
        }
 
+       struct sr_rt *match = NULL;
+
+
+       match = LPM(sr,ip_hdr->ip_dst);
+
+
+       printf("Interface is :%s",match->interface);
+       if(!match){
+         return;
+       }
+       struct sr_if *out = sr_get_interface(sr, match->interface);
+
+
+       e_hdr->ether_type = htons(ethertype_ip);
+
+       /*Setting ICMP*/
+       icmp_hdr->icmp_type = 0;
+       icmp_hdr->icmp_code = 0;
        icmp_hdr->icmp_sum = 0;
-       icmp_hdr->icmp_sum = cksum(icmp_hdr, len - sizeof(sr_ethernet_hdr_t) - sizeof(sr_ip_hdr_t));
+       icmp_hdr->icmp_sum = cksum(icmp_hdr, ntohs(ip_hdr->ip_len) - (ip_hdr->ip_hl * 4));
        ip_hdr->ip_sum = 0;
        ip_hdr->ip_sum = cksum(ip_hdr, sizeof(sr_ip_hdr_t));
+
+       /*send the packet*/
+       handle_packet(sr,packet,len,out,match->gw.s_addr);
+
 
     }else if (protocol ==ip_protocol_tcp){
        printf("Nat with TCP\n");
