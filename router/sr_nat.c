@@ -219,7 +219,7 @@ void handle_nat(struct sr_instance* sr,uint8_t * packet,unsigned int len,char* i
               print_addr_ip_int(result->ip_ext);
               ip_hdr->ip_src = sr_get_interface(sr, NAT_OUT)->ip;
               icmp_hdr->icmp_id = result->aux_ext;
-              // icmp_hdr->icmp_type = 8;
+              /*icmp_hdr->icmp_type = 8;*/
 
         }
 
