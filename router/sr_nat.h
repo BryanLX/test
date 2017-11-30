@@ -10,6 +10,7 @@
 #include "sr_router.h"
 #include "sr_protocol.h"
 #include "sr_utils.h"
+#include "sr_if.h"
 
 #define START_PORT 1025
 #define END_PORT 65535

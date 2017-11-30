@@ -237,12 +237,13 @@ void handle_nat(struct sr_instance* sr,uint8_t * packet,unsigned int len,char* i
        }
 
 
-      struct sr_rt * match  = 0;
+      struct sr_rt * match  = NULL;
       match = LPM(sr,ip_hdr->ip_dst);
 
        if(!match){
          return;
        }
+
        struct sr_if *out = sr_get_interface(sr, match->interface);
 
 
