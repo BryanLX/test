@@ -186,7 +186,6 @@ struct sr_nat_connection* sr_nat_lookup_connection(struct sr_nat* nat,struct sr_
 
 void handle_nat(struct sr_instance* sr,uint8_t * packet,unsigned int len,char* interface) {
     struct sr_nat * nat = sr->nat;
-    pthread_mutex_lock(&(sr->nat.lock));
     /* get current information */
     sr_ethernet_hdr_t *e_hdr = (sr_ethernet_hdr_t *) packet;
     sr_ip_hdr_t *ip_hdr = (struct sr_ip_hdr *)(packet + sizeof(sr_ethernet_hdr_t));
@@ -205,11 +204,12 @@ void handle_nat(struct sr_instance* sr,uint8_t * packet,unsigned int len,char* i
               /* If not exist then Insert */
               result = sr_nat_insert_mapping(nat, ip_hdr->ip_src, icmp_hdr->icmp_id, nat_mapping_icmp);
               result->ip_ext = sr_get_interface(sr, NAT_OUT)->ip;
+              result->last_updated = time(NULL);
           }
           /*ip_hdr->ip_src = result->ip_ext; */
           printf("hey ip_src: \n");
           print_addr_ip_int(result->ip_ext);
-          ip_hdr->ip_src = result->ip_ext;
+          ip_hdr->ip_src = sr_get_interface(sr, NAT_OUT)->ip;
           icmp_hdr->icmp_id = result->aux_ext;
 
 
@@ -218,7 +218,12 @@ void handle_nat(struct sr_instance* sr,uint8_t * packet,unsigned int len,char* i
           /* outside to inside*/
 
           result = sr_nat_lookup_external(nat, icmp_hdr->icmp_id, nat_mapping_icmp);
+          struct sr_if *iface = sr_get_interface_by_ipaddr(sr, ip_hdr->ip_dst);
+          if(iface && result){
+               ip_hdr->ip_dst = result->ip_int;
+               icmp_hdr->icmp_id = result->aux_int;
 
+          }
           if (!result){
             printf("outside to inside not found \n");
             return;
@@ -247,5 +252,4 @@ void handle_nat(struct sr_instance* sr,uint8_t * packet,unsigned int len,char* i
       printf("Nat with unsupported protocol\n");
       return;
     }
-    pthread_mutex_unlock(&(sr->nat.lock));
 }
