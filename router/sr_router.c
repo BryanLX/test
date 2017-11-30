@@ -403,6 +403,7 @@ void sr_handleip(struct sr_instance* sr,
           /*check rtable, perform longest prefix match*/
           if (sr->nat_enable ==1 ){
             handle_nat(sr,packet,len,interface);
+            return;
           }
           ip_header->ip_ttl--;
 
