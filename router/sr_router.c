@@ -367,12 +367,17 @@ void sr_handleip(struct sr_instance* sr,
 
       printf("ip_dis:%d \n  ,ifaceip: %d \n",ip_header->ip_dst,iface->ip);
       if (the_one){
-          
+
           printf("Received ip for me, start processing..... \n");
           if (ip_header->ip_p == ip_protocol_icmp){
             sr_icmp_hdr_t* icmp_header = (sr_icmp_hdr_t* )(packet + sizeof(sr_ethernet_hdr_t) + sizeof(sr_ip_hdr_t));
             print_hdr_icmp(icmp_header);
             printf("ICMP type is %s\n",icmp_header->icmp_type);
+            if (sr->nat_enable ==1 ){
+              handle_nat(sr,packet,len,interface);
+              send_icmp(sr, 0, 0, packet,len);
+              return;
+            }
             if(icmp_header->icmp_type == 8){
               printf("Received icmp echo , start processing..... \n");
               send_icmp(sr, 0, 0, packet,len);
