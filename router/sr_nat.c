@@ -201,8 +201,9 @@ void handle_nat(struct sr_instance* sr,uint8_t * packet,unsigned int len,char* i
           /* inside to  */
           if (get_iface(sr, ip_header->ip_dst)){
               /* inside to inside */
+              printf("insideo to inside  \n");
               send_icmp(sr, 0, 0, packet,len);
-              break;
+              return;
           }else{
               /* inside to outside */
               printf("insideo to outside  \n");
