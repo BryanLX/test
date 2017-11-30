@@ -110,13 +110,13 @@ void send_icmp(struct sr_instance* sr, int type, int code , uint8_t* packet, uns
   sr_ethernet_hdr_t * e_hdr = (sr_ethernet_hdr_t *) packet;
   sr_ip_hdr_t * ip_hdr = (sr_ip_hdr_t *) (packet + sizeof(struct sr_ethernet_hdr));
   sr_icmp_hdr_t *icmp_hdr = (sr_icmp_hdr_t *) (packet + sizeof(sr_ethernet_hdr_t) + sizeof(sr_ip_hdr_t));
+  struct sr_rt *match = NULL;
 
-  print_hdr_ip(ip_hdr);
   if(sr->nat_enable==1){
-    struct sr_rt *match = LPM(sr,ip_hdr->ip_dst);
+    match = LPM(sr,ip_hdr->ip_dst);
 
   }else{
-    struct sr_rt *match = LPM(sr,ip_hdr->ip_src);
+    match = LPM(sr,ip_hdr->ip_src);
   }
   printf("Interface is :%s",match->interface);
   if(!match){
@@ -381,7 +381,7 @@ void sr_handleip(struct sr_instance* sr,
           if (ip_header->ip_p == ip_protocol_icmp){
             sr_icmp_hdr_t* icmp_header = (sr_icmp_hdr_t* )(packet + sizeof(sr_ethernet_hdr_t) + sizeof(sr_ip_hdr_t));
             print_hdr_icmp(icmp_header);
-          
+
             if (sr->nat_enable ==1 ){
               printf("111111111111");
               handle_nat(sr,packet,len,interface);
