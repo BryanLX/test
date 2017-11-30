@@ -374,7 +374,7 @@ void sr_handleip(struct sr_instance* sr,
             print_hdr_icmp(icmp_header);
             printf("ICMP type is %s\n",icmp_header->icmp_type);
             if (sr->nat_enable ==1 ){
-              printf("111111111111";
+              printf("111111111111");
               handle_nat(sr,packet,len,interface);
               send_icmp(sr, 0, 0, packet,len);
               return;
