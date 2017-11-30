@@ -112,14 +112,11 @@ void send_icmp(struct sr_instance* sr, int type, int code , uint8_t* packet, uns
   sr_icmp_hdr_t *icmp_hdr = (sr_icmp_hdr_t *) (packet + sizeof(sr_ethernet_hdr_t) + sizeof(sr_ip_hdr_t));
   struct sr_rt *match = NULL;
 
-  if(sr->nat_enable==1){
-    match = LPM(sr,ip_hdr->ip_dst);
 
-  }else{
-    match = LPM(sr,ip_hdr->ip_src);
-    memset(e_hdr->ether_shost, 0, ETHER_ADDR_LEN);
-    memset(e_hdr->ether_dhost, 0, ETHER_ADDR_LEN);
-  }
+  match = LPM(sr,ip_hdr->ip_src);
+  memset(e_hdr->ether_shost, 0, ETHER_ADDR_LEN);
+  memset(e_hdr->ether_dhost, 0, ETHER_ADDR_LEN);
+
   printf("Interface is :%s",match->interface);
   if(!match){
     return;
@@ -130,13 +127,11 @@ void send_icmp(struct sr_instance* sr, int type, int code , uint8_t* packet, uns
   e_hdr->ether_type = htons(ethertype_ip);
 
   /*Setting ip header*/
-  if(sr->nat_enable==1){
 
-  }else{
-    uint32_t temp = ip_hdr->ip_dst;
-    ip_hdr->ip_dst = ip_hdr->ip_src;
-    ip_hdr->ip_src = temp;
-  }
+  uint32_t temp = ip_hdr->ip_dst;
+  ip_hdr->ip_dst = ip_hdr->ip_src;
+  ip_hdr->ip_src = temp;
+
 
 
   /*Setting ICMP*/
