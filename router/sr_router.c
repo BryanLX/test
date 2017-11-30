@@ -374,6 +374,7 @@ void sr_handleip(struct sr_instance* sr,
           printf("Received ip for me, start processing..... \n");
           if (ip_header->ip_p == ip_protocol_icmp){
             sr_icmp_hdr_t* icmp_header = (sr_icmp_hdr_t* )(packet + sizeof(sr_ethernet_hdr_t) + sizeof(sr_ip_hdr_t));
+            printf("ICMP type is %s\n",icmp_header->icmp_type);
             if(icmp_header->icmp_type == 8){
               printf("Received icmp echo , start processing..... \n");
               send_icmp(sr, 0, 0, packet,len);
