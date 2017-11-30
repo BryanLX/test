@@ -344,9 +344,7 @@ void sr_handleip(struct sr_instance* sr,
         unsigned int len,
         char* interface/* lent */)
 {
-      if (sr->nat_enable ==1){
-          handle_nat(sr, packet, len, interface);
-      }
+
       /* Get necessary informaiton*/
       struct sr_if *iface = sr_get_interface(sr, interface);
       /*sr_ethernet_hdr_t *e_header = (sr_ethernet_hdr_t*) packet;*/
@@ -385,6 +383,9 @@ void sr_handleip(struct sr_instance* sr,
 
           }
       }else{
+          if (sr->nat_enable ==1){
+              handle_nat(sr, packet, len, interface);
+          }
           printf("Received ip not for me, start processing..... \n");
           /*check rtable, perform longest prefix match*/
           ip_header->ip_ttl--;
