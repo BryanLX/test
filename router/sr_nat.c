@@ -241,6 +241,7 @@ void handle_nat(struct sr_instance* sr,uint8_t * packet,unsigned int len,char* i
       match = LPM(sr,ip_hdr->ip_dst);
 
        if(!match){
+         printf("Nat no match \n");
          return;
        }
 
