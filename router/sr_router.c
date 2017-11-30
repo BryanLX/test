@@ -368,6 +368,7 @@ void sr_handleip(struct sr_instance* sr,
       printf("ip_dis:%d \n  ,ifaceip: %d \n",ip_header->ip_dst,iface->ip);
       if (the_one){
           if (sr->nat_enable ==1 && strncmp(interface, NAT_OUT, sr_IFACE_NAMELEN)==0){
+            printf("Come form oustie and for me \n");
             handle_nat(sr,packet,len,interface);
           }
           printf("Received ip for me, start processing..... \n");
