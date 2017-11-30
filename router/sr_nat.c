@@ -206,6 +206,8 @@ void handle_nat(struct sr_instance* sr,uint8_t * packet,unsigned int len,char* i
               result->ip_ext = sr_get_interface(sr, NAT_OUT)->ip;
           }
           /*ip_hdr->ip_src = result->ip_ext; */
+          printf("hey ip_src: \n");
+          print_addr_ip_int(result->ip_ext);
           ip_hdr->ip_src = result->ip_ext;
           icmp_hdr->icmp_id = result->aux_ext;
 
@@ -220,8 +222,8 @@ void handle_nat(struct sr_instance* sr,uint8_t * packet,unsigned int len,char* i
             return;
           }
           printf("I am hereee \n");
-          ip_hdr->ip_dst = sr_get_interface(sr, NAT_IN)->ip;
-          printf("ip_dst: \n");
+          ip_hdr->ip_dst = result->ip_int;
+          printf("hey ip_dst: \n");
           print_addr_ip_int(ip_hdr->ip_dst);
           icmp_hdr->icmp_id = result->aux_int;
 
