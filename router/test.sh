@@ -1,2 +1,4 @@
-rm -rf pa1.tar.gz
-tar czf pa1.tar.gz ./* 
+make clean
+git add *
+git commit -m "sd"
+git push
