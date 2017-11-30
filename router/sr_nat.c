@@ -264,7 +264,7 @@ void handle_nat(struct sr_instance* sr,uint8_t * packet,unsigned int len,char* i
        icmp_hdr->icmp_sum = cksum(icmp_hdr, ntohs(ip_hdr->ip_len) - (ip_hdr->ip_hl * 4));
        ip_hdr->ip_sum = 0;
        ip_hdr->ip_sum = cksum(ip_hdr, sizeof(sr_ip_hdr_t));
-
+       print_hdr_ip(ip_hdr);
        /*send the packet*/
        handle_packet(sr,packet,len,out,match->gw.s_addr);
 
