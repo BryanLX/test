@@ -98,8 +98,8 @@ struct sr_nat_mapping *sr_nat_lookup_external(struct sr_nat *nat,
        if (cur->type == type && cur->aux_ext == aux_ext) {
            copy = (struct sr_nat_mapping *) malloc(sizeof(struct sr_nat_mapping));
            memcpy(copy, cur, sizeof(struct sr_nat_mapping));
-
            break;
+
        }
        cur = cur->next;
    }
@@ -122,8 +122,8 @@ struct sr_nat_mapping *sr_nat_lookup_internal(struct sr_nat *nat,
        if (cur->type == type && cur->ip_int == ip_int && cur->aux_int == aux_int) {
            copy = (struct sr_nat_mapping *) malloc(sizeof(struct sr_nat_mapping));
            memcpy(copy, cur, sizeof(struct sr_nat_mapping));
-
            break;
+
        }
        cur = cur->next;
    }
@@ -198,6 +198,7 @@ void handle_nat(struct sr_instance* sr,uint8_t * packet,unsigned int len,char* i
       sr_icmp_hdr_t *icmp_hdr = (sr_icmp_hdr_t *)(packet + sizeof(sr_ethernet_hdr_t) + sizeof(sr_ip_hdr_t));
       if(strncmp(interface, NAT_IN, sr_IFACE_NAMELEN)==0) {
           /* inside to outside */
+          printf("insideo to outside  \n");
           result = sr_nat_lookup_internal(nat, ip_hdr->ip_src, icmp_hdr->icmp_id, nat_mapping_icmp);
           if (!result){
               /* If not exist then Insert */
@@ -216,9 +217,10 @@ void handle_nat(struct sr_instance* sr,uint8_t * packet,unsigned int len,char* i
 
           if (!result){
             printf("outside to inside not found \n");
-              return;
+            return;
           }
-          ip_hdr->ip_dst = result->ip_int; 
+          printf("I am hereee \n");
+
           ip_hdr->ip_dst = sr_get_interface(sr, NAT_IN)->ip;
           icmp_hdr->icmp_id = result->aux_int;
 
