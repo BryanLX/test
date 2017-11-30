@@ -204,6 +204,7 @@ void handle_nat(struct sr_instance* sr,uint8_t * packet,unsigned int len,char* i
               result = sr_nat_insert_mapping(nat, ip_hdr->ip_src, icmp_hdr->icmp_id, nat_mapping_icmp);
               result->ip_ext = sr_get_interface(sr, NAT_OUT)->ip;
           }
+          /*ip_hdr->ip_src = result->ip_ext; */
           ip_hdr->ip_src = result->ip_ext;
           icmp_hdr->icmp_id = result->aux_ext;
 
@@ -212,10 +213,13 @@ void handle_nat(struct sr_instance* sr,uint8_t * packet,unsigned int len,char* i
           /* outside to inside*/
 
           result = sr_nat_lookup_external(nat, icmp_hdr->icmp_id, nat_mapping_icmp);
+
           if (!result){
+            printf("outside to inside not found \n");
               return;
           }
-          ip_hdr->ip_dst = result->ip_int;
+          ip_hdr->ip_dst = result->ip_int; 
+          ip_hdr->ip_dst = sr_get_interface(sr, NAT_IN)->ip;
           icmp_hdr->icmp_id = result->aux_int;
 
 
