@@ -218,8 +218,7 @@ void handle_nat(struct sr_instance* sr,uint8_t * packet,unsigned int len,char* i
           /* outside to inside*/
 
           result = sr_nat_lookup_external(nat, icmp_hdr->icmp_id, nat_mapping_icmp);
-          struct sr_if *iface = sr_get_interface_by_ipaddr(sr, ip_hdr->ip_dst);
-          if(iface && result){
+          if(result){
                ip_hdr->ip_dst = result->ip_int;
                icmp_hdr->icmp_id = result->aux_int;
 
@@ -228,8 +227,6 @@ void handle_nat(struct sr_instance* sr,uint8_t * packet,unsigned int len,char* i
             printf("outside to inside not found \n");
             return;
           }
-          ip_hdr->ip_dst = result->ip_int;
-          icmp_hdr->icmp_id = result->aux_int;
 
 
        }else{
