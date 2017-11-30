@@ -398,7 +398,7 @@ void sr_handleip(struct sr_instance* sr,
           struct sr_rt* result = LPM(sr,ip_header->ip_dst);
 
           if(result){
-            printf("LPM found %s\n",sr_get_interface(sr, result->interface)->name),;
+            printf("LPM found %s\n",sr_get_interface(sr, result->interface)->name);
             handle_packet(sr,packet,len,sr_get_interface(sr, result->interface),result->gw.s_addr);
 
           }else{
