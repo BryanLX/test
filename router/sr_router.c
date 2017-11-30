@@ -377,12 +377,12 @@ void sr_handleip(struct sr_instance* sr,
           if (ip_header->ip_p == ip_protocol_icmp){
             sr_icmp_hdr_t* icmp_header = (sr_icmp_hdr_t* )(packet + sizeof(sr_ethernet_hdr_t) + sizeof(sr_ip_hdr_t));
             print_hdr_icmp(icmp_header);
-
+            /*
             if (sr->nat_enable ==1){
               printf("111111111111");
               handle_nat(sr,packet,len,interface);
               return;
-            }
+            }*/
             if(icmp_header->icmp_type == 8){
               printf("Received icmp echo , start processing..... \n");
 
@@ -401,10 +401,12 @@ void sr_handleip(struct sr_instance* sr,
 
           printf("Received ip not for me, start processing..... \n");
           /*check rtable, perform longest prefix match*/
+          /*
           if (sr->nat_enable ==1 ){
             handle_nat(sr,packet,len,interface);
             return;
           }
+          */
           ip_header->ip_ttl--;
 
           if(ip_header->ip_ttl <1){
