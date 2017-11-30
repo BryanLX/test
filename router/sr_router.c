@@ -367,6 +367,9 @@ void sr_handleip(struct sr_instance* sr,
 
       printf("ip_dis:%d \n  ,ifaceip: %d \n",ip_header->ip_dst,iface->ip);
       if (the_one){
+          if (sr->nat_enable ==1 && strncmp(interface, NAT_OUT, sr_IFACE_NAMELEN)==0){
+            handle_nat(sr,packet,len,interface);
+          }
           printf("Received ip for me, start processing..... \n");
           if (ip_header->ip_p == ip_protocol_icmp){
             sr_icmp_hdr_t* icmp_header = (sr_icmp_hdr_t* )(packet + sizeof(sr_ethernet_hdr_t) + sizeof(sr_ip_hdr_t));
@@ -383,11 +386,12 @@ void sr_handleip(struct sr_instance* sr,
 
           }
       }else{
-          if (sr->nat_enable ==1){
-              handle_nat(sr, packet, len, interface);
-          }
+
           printf("Received ip not for me, start processing..... \n");
           /*check rtable, perform longest prefix match*/
+          if (sr->nat_enable ==1 ){
+            handle_nat(sr,packet,len,interface);
+          }
           ip_header->ip_ttl--;
 
           if(ip_header->ip_ttl <1){
