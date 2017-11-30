@@ -5,16 +5,36 @@
 #include <inttypes.h>
 #include <time.h>
 #include <pthread.h>
+#include <stdlib.h>
+#include <string.h>
+#include "sr_router.h"
+#include "sr_protocol.h"
+#include "sr_utils.h"
+
+#define START_PORT 1025
+#define END_PORT 65535
+
+#define NAT_IN "eth1"
+#define NAT_OUT "eth2"
 
 typedef enum {
   nat_mapping_icmp,
   nat_mapping_tcp
   /* nat_mapping_udp, */
 } sr_nat_mapping_type;
+/*
+typedef enum {
 
+
+} sr_tcp_type;
+*/
 struct sr_nat_connection {
   /* add TCP connection state data members here */
-
+  uint32_t ip;
+  uint16_t port_num;
+  /*sr_tcp_type; */
+  uint8_t *unsolicited_packet;
+  time_t last_updated;
   struct sr_nat_connection *next;
 };
 
@@ -32,6 +52,10 @@ struct sr_nat_mapping {
 struct sr_nat {
   /* add any fields here */
   struct sr_nat_mapping *mappings;
+  unsigned int icmp_query_timeout;
+  unsigned int tcp_established_timeout;
+  unsigned int tcp_transitory_timeout;
+  uint32_t counter;
 
   /* threading */
   pthread_mutex_t lock;
@@ -59,6 +83,12 @@ struct sr_nat_mapping *sr_nat_lookup_internal(struct sr_nat *nat,
    You must free the returned structure if it is not NULL. */
 struct sr_nat_mapping *sr_nat_insert_mapping(struct sr_nat *nat,
   uint32_t ip_int, uint16_t aux_int, sr_nat_mapping_type type );
+
+
+/*
+ Translate when nat is enable
+ */
+void handle_nat(struct sr_instance* sr,uint8_t * packet,unsigned int len,char* interface);
 
 
 #endif

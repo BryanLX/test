@@ -21,6 +21,7 @@
 #include "sr_protocol.h"
 #include "sr_arpcache.h"
 #include "sr_utils.h"
+#include "sr_nat.h"
 
 /*---------------------------------------------------------------------
  * Method: sr_init(void)
@@ -47,6 +48,9 @@ void sr_init(struct sr_instance* sr)
     pthread_create(&thread, &(sr->attr), sr_arpcache_timeout, sr);
 
     /* Add initialization code here! */
+    if (sr->nat != NULL) {
+        sr_nat_init(sr->nat);
+    }
 
 
 } /* -- sr_init -- */
@@ -339,6 +343,9 @@ void sr_handleip(struct sr_instance* sr,
         unsigned int len,
         char* interface/* lent */)
 {
+      if (sr->nat_enable ==1){
+          handle_nat(sr, packet, len, interface);
+      }
       /* Get necessary informaiton*/
       struct sr_if *iface = sr_get_interface(sr, interface);
       /*sr_ethernet_hdr_t *e_header = (sr_ethernet_hdr_t*) packet;*/
