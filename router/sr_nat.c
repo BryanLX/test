@@ -186,6 +186,7 @@ struct sr_nat_connection* sr_nat_lookup_connection(struct sr_nat* nat,struct sr_
 
 void handle_nat(struct sr_instance* sr,uint8_t * packet,unsigned int len,char* interface) {
     struct sr_nat * nat = sr->nat;
+    pthread_mutex_lock(&(sr->nat.lock));
     /* get current information */
     sr_ethernet_hdr_t *e_hdr = (sr_ethernet_hdr_t *) packet;
     sr_ip_hdr_t *ip_hdr = (struct sr_ip_hdr *)(packet + sizeof(sr_ethernet_hdr_t));
@@ -210,6 +211,7 @@ void handle_nat(struct sr_instance* sr,uint8_t * packet,unsigned int len,char* i
           print_addr_ip_int(result->ip_ext);
           ip_hdr->ip_src = result->ip_ext;
           icmp_hdr->icmp_id = result->aux_ext;
+
 
 
        }else if(strncmp(interface, NAT_OUT, sr_IFACE_NAMELEN)==0){
@@ -245,5 +247,5 @@ void handle_nat(struct sr_instance* sr,uint8_t * packet,unsigned int len,char* i
       printf("Nat with unsupported protocol\n");
       return;
     }
-
+    pthread_mutex_unlock(&(sr->nat.lock));
 }

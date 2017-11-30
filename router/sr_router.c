@@ -117,6 +117,8 @@ void send_icmp(struct sr_instance* sr, int type, int code , uint8_t* packet, uns
 
   }else{
     match = LPM(sr,ip_hdr->ip_src);
+    memset(e_hdr->ether_shost, 0, ETHER_ADDR_LEN);
+    memset(e_hdr->ether_dhost, 0, ETHER_ADDR_LEN);
   }
   printf("Interface is :%s",match->interface);
   if(!match){
@@ -124,9 +126,7 @@ void send_icmp(struct sr_instance* sr, int type, int code , uint8_t* packet, uns
   }
   struct sr_if *out = sr_get_interface(sr, match->interface);
 
-  /*Setting ethernet header*/
-  memset(e_hdr->ether_shost, 0, ETHER_ADDR_LEN);
-  memset(e_hdr->ether_dhost, 0, ETHER_ADDR_LEN);
+
   e_hdr->ether_type = htons(ethertype_ip);
 
   /*Setting ip header*/
