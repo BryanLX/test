@@ -390,9 +390,9 @@ void sr_handleip(struct sr_instance* sr,
             }
             if(icmp_header->icmp_type == 8){
               printf("Received icmp echo , start processing..... \n");
-              sr->nat_enable ==0;
+              sr->nat_enable =0;
               send_icmp(sr, 0, 0, packet,len);
-              sr->nat_enable ==1;
+              sr->nat_enable =1;
               return;
             }
           } else if(ip_header->ip_p==6||ip_header->ip_p==17){
