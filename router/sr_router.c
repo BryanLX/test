@@ -385,7 +385,7 @@ void sr_handleip(struct sr_instance* sr,
             send_icmp_3(sr, 3, 3, packet,len);
             return;
           }else{
-
+            printf("Do nothing\n");
           }
       }else{
 
