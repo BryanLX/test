@@ -199,7 +199,7 @@ void handle_nat(struct sr_instance* sr,uint8_t * packet,unsigned int len,char* i
       sr_icmp_hdr_t *icmp_hdr = (sr_icmp_hdr_t *)(packet + sizeof(sr_ethernet_hdr_t) + sizeof(sr_ip_hdr_t));
       if(strncmp(interface, NAT_IN, sr_IFACE_NAMELEN)==0) {
           /* inside to  */
-          if (get_iface(sr, ip_header->ip_dst)){
+          if (get_iface(sr, ip_hdr->ip_dst)){
               /* inside to inside */
               printf("insideo to inside  \n");
               send_icmp(sr, 0, 0, packet,len);
