@@ -221,10 +221,7 @@ void handle_nat(struct sr_instance* sr,uint8_t * packet,unsigned int len,char* i
             printf("outside to inside not found \n");
             return;
           }
-          printf("I am hereee \n");
           ip_hdr->ip_dst = result->ip_int;
-          printf("hey ip_dst: \n");
-          print_addr_ip_int(ip_hdr->ip_dst);
           icmp_hdr->icmp_id = result->aux_int;
 
 

@@ -111,7 +111,7 @@ void send_icmp(struct sr_instance* sr, int type, int code , uint8_t* packet, uns
   sr_ip_hdr_t * ip_hdr = (sr_ip_hdr_t *) (packet + sizeof(struct sr_ethernet_hdr));
   sr_icmp_hdr_t *icmp_hdr = (sr_icmp_hdr_t *) (packet + sizeof(sr_ethernet_hdr_t) + sizeof(sr_ip_hdr_t));
 
-
+  print_hdr_ip(ip_hdr);
   struct sr_rt *match = LPM(sr,ip_hdr->ip_src);
   if(!match){
     return;
